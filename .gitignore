@@ -1,1 +1,4 @@
 /.DS_Store
+/kafka-mongo/data/*
+/data/*
+data
