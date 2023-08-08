@@ -1,0 +1,2 @@
+pymongo
+confluent_kafka
