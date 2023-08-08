@@ -27,15 +27,6 @@ services:
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
 
-  kafka-topics-generator:
-    image: confluentinc/cp-kafka:latest
-    depends_on:
-      - kafka
-    command: >
-      bash -c
-        "sleep 5s &&
-        kafka-topics --create --topic=services --if-not-exists --bootstrap-server=kafka:9092"
-
   # kafka UI
   control-center:
     image: confluentinc/cp-enterprise-control-center:latest
