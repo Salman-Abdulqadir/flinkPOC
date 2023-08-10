@@ -80,6 +80,6 @@ services:
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
         taskmanager.numberOfTaskSlots: 2
-
 volumes:
   dbdata:
+  mongo_connector:
