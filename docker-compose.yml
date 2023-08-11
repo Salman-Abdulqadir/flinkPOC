@@ -68,6 +68,8 @@ services:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
+    volumes:
+      - ./mongo_connector:/home
 
   taskmanager:
     image: flink:latest
@@ -80,6 +82,8 @@ services:
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
         taskmanager.numberOfTaskSlots: 2
+    volumes:
+      - ./mongo_connector:/home
 volumes:
   dbdata:
   mongo_connector:
