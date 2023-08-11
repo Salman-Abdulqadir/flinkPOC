@@ -14,13 +14,14 @@ import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
 
+import org.apache.log4j.BasicConfigurator;
 import org.bson.BsonDocument;
 
 public class M2KConnector
 {
-    public static void main( String[] args ) throws Exception
+    public static void main( String[] args )
     {
-//        BasicConfigurator.configure();
+        BasicConfigurator.configure();
         connector("mongodb://localhost:27017/", "employeedb", "employees");
     }
     public static void connector(String mongoUri, String dbName, String collection){
@@ -50,25 +51,22 @@ public class M2KConnector
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        DataStreamSource<String> stream= env.fromSource(source, WatermarkStrategy.noWatermarks(), "MongoDB-Source");
+       env.fromSource(source, WatermarkStrategy.noWatermarks(), "MongoDB-Source").setParallelism(2)
+        .print()
+//        stream.sinkTo(sink);
+        .setParallelism(1);
 
-        // kafka data sink
-        // creating a serializer
-        KafkaSink<String> sink = KafkaSink.<String>builder()
-                .setBootstrapServers("local")
-                .setRecordSerializer(KafkaRecordSerializationSchema.builder()
-                        .setTopic("topic-name")
-                        .setValueSerializationSchema(new SimpleStringSchema())
-                        .build()
-                )
-                .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
-                .build();
-
-        stream.setParallelism(2);
-        stream.print();
-        stream.sinkTo(sink);
-        stream.setParallelism(1);
-
+//         kafka data sink
+//        // creating a serializer
+//        KafkaSink<String> sink = KafkaSink.<String>builder()
+//                .setBootstrapServers("local")
+//                .setRecordSerializer(KafkaRecordSerializationSchema.builder()
+//                        .setTopic("topic-name")
+//                        .setValueSerializationSchema(new SimpleStringSchema())
+//                        .build()
+//                )
+//                .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
+//                .build();
     }
 
 }
