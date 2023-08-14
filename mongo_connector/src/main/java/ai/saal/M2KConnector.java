@@ -1,35 +1,33 @@
 package ai.saal;
 
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
-import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.configuration.MemorySize;
-import org.apache.flink.connector.base.DeliveryGuarantee;
-import org.apache.flink.connector.kafka.sink.KafkaRecordSerializationSchema;
 import org.apache.flink.connector.mongodb.source.MongoSource;
+import org.apache.flink.connector.mongodb.sink.MongoSink;
 import org.apache.flink.connector.mongodb.source.enumerator.splitter.PartitionStrategy;
 import org.apache.flink.connector.mongodb.source.reader.deserializer.MongoDeserializationSchema;
+import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.connector.kafka.sink.KafkaSink;
-
 import org.apache.log4j.BasicConfigurator;
 import org.bson.BsonDocument;
+import org.apache.flink.connector.base.DeliveryGuarantee;
+import com.mongodb.client.model.InsertOneModel;
+
+import java.util.stream.Stream;
 
 public class M2KConnector
 {
-    public static void main( String[] args )
+    public static void main( String[] args ) throws Exception
     {
         BasicConfigurator.configure();
-        connector("mongodb://localhost:27017/", "employeedb", "employees");
-    }
-    public static void connector(String mongoUri, String dbName, String collection){
         MongoSource<String> source = MongoSource.<String>builder()
-                .setUri(mongoUri)
-                .setDatabase(dbName)
-                .setCollection(collection)
-                .setProjectedFields("_id")
+                .setUri("mongodb://mongodb:27017/")
+                .setDatabase("employeedb")
+                .setCollection("employees")
+                .setProjectedFields("_id", "position")
                 .setFetchSize(2048)
                 .setLimit(10000)
                 .setNoCursorTimeout(true)
@@ -49,24 +47,26 @@ public class M2KConnector
                 })
                 .build();
 
+        MongoSink<String> sink = MongoSink.<String>builder()
+                .setUri("mongodb://mongodb:27017/")
+                .setDatabase("sink")
+                .setCollection("employee")
+                .setBatchSize(1000)
+                .setBatchIntervalMs(1000)
+                .setMaxRetries(3)
+                .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
+                .setSerializationSchema(
+                        (input, context) -> new InsertOneModel<>(BsonDocument.parse(input)))
+                .build();
+
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-       env.fromSource(source, WatermarkStrategy.noWatermarks(), "MongoDB-Source").setParallelism(2)
-        .print()
-//        stream.sinkTo(sink);
-        .setParallelism(1);
+        env.fromSource(source, WatermarkStrategy.noWatermarks(), "MongoDB-Source")
+                    .setParallelism(2)
+                    .sinkTo(sink)
+                    .setParallelism(1);
 
-//         kafka data sink
-//        // creating a serializer
-//        KafkaSink<String> sink = KafkaSink.<String>builder()
-//                .setBootstrapServers("local")
-//                .setRecordSerializer(KafkaRecordSerializationSchema.builder()
-//                        .setTopic("topic-name")
-//                        .setValueSerializationSchema(new SimpleStringSchema())
-//                        .build()
-//                )
-//                .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
-//                .build();
+        env.execute("M2KConnector");
     }
 
 }

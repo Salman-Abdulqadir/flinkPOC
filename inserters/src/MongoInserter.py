@@ -40,7 +40,7 @@ class MongoDBEmployeeInserter:
                 i+=1
                 if i == 20:
                     i = 0
-                    time.sleep(30)
+                    time.sleep(3)
         except KeyboardInterrupt:
             self.client.close()
             print("Program terminated.")

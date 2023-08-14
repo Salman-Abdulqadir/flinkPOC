@@ -13,14 +13,14 @@
           <configuration>
             <archive>
               <manifest>
-                <mainClass>ai.saal.M2KConnector</mainClass>
+                <mainClass>ai.saal.Main</mainClass>
               </manifest>
             </archive>
           </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-shade-plugin</artifactId>
-          <version>3.2.4</version>
+          <version>3.1.1</version>
           <executions>
             <execution>
               <phase>package</phase>
@@ -28,10 +28,26 @@
                 <goal>shade</goal>
               </goals>
               <configuration>
+                <artifactSet>
+                  <excludes>
+                    <exclude>com.google.code.findbugs:jsr305</exclude>
+                  </excludes>
+                </artifactSet>
+                <filters>
+                  <filter>
+                    <artifact>*:*</artifact>
+                    <excludes>
+                      <exclude>META-INF/*.SF</exclude>
+                      <exclude>META-INF/*.DSA</exclude>
+                      <exclude>META-INF/*.RSA</exclude>
+                    </excludes>
+                  </filter>
+                </filters>
                 <transformers>
                   <transformer>
-                    <mainClass>ai.saal.M2KConnector</mainClass>
+                    <mainClass>ai.saal.Main</mainClass>
                   </transformer>
+                  <transformer />
                 </transformers>
               </configuration>
             </execution>
