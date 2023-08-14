@@ -2,7 +2,6 @@ package ai.saal;
 
 import com.mongodb.client.model.InsertOneModel;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
-
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.connector.base.DeliveryGuarantee;
 import org.apache.flink.connector.kafka.source.enumerator.initializer.OffsetsInitializer;
@@ -16,18 +15,21 @@ public class K2MConnector {
     public static void main( String[] args ) throws Exception
     {
         BasicConfigurator.configure();
+
+        // kafka source
         KafkaSource<String> source = KafkaSource.<String>builder()
-                .setBootstrapServers("kafka:2701")
-                .setTopics("input-topic")
+                .setBootstrapServers("kafka:9092")
+                .setTopics("movie_ratings")
                 .setGroupId("my-group")
                 .setStartingOffsets(OffsetsInitializer.earliest())
                 .setValueOnlyDeserializer(new SimpleStringSchema())
                 .build();
 
+        // Mongo Sink
         MongoSink<String> sink = MongoSink.<String>builder()
                 .setUri("mongodb://mongodb:27017/")
                 .setDatabase("sink")
-                .setCollection("employee")
+                .setCollection("movies")
                 .setBatchSize(1000)
                 .setBatchIntervalMs(1000)
                 .setMaxRetries(3)

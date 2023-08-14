@@ -44,7 +44,7 @@ class MovieRatingGenerator:
             self.producer.flush()
 
 if __name__ == "__main__":
-    bootstrap_servers = "172.17.0.1:9094"
+    bootstrap_servers = "localhost:29092"
     
     rating_generator = MovieRatingGenerator(bootstrap_servers)
     rating_generator.run()
