@@ -45,6 +45,6 @@ public class K2MConnector {
                 .sinkTo(sink)
                 .setParallelism(1);
 
-        env.execute("M2KConnector");
+        env.execute("K2MConnector");
     }
 }

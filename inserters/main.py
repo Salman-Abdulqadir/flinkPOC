@@ -8,7 +8,7 @@ def main():
     collection_name = "employees"
     inserter = MongoDBEmployeeInserter(mongodb_uri, database_name, collection_name)
 
-    bootstrap_servers = "localhost:9092"
+    bootstrap_servers = "kafka:9092"
     rating_generator = MovieRatingGenerator(bootstrap_servers)
 
     employee_thread = threading.Thread(target=inserter.run)
