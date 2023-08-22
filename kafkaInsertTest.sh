@@ -1,1 +1,1 @@
-python3.9 inserters/src/KafkaInserter.py
+python3.9 inserters/main.py

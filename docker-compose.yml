@@ -1,5 +1,6 @@
 version: "3"
 services:
+  # kafka with zookeeper
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
@@ -22,22 +23,22 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
-  kafka-topics-generator:
-    image: confluentinc/cp-kafka:latest
-    depends_on:
-      - kafka
-    command: >
-      bash -c
-        "sleep 5s &&
-        kafka-topics --create --topic=services --if-not-exists --bootstrap-server=kafka:9092"
+  # kafka-topics-generator:
+  #   image: confluentinc/cp-kafka:latest
+  #   depends_on:
+  #     - kafka
+  #   command: >
+  #     bash -c
+  #       "sleep 5s &&
+  #       kafka-topics --create --topic=services --if-not-exists --bootstrap-server=kafka:9092"
 
-  #mongo db
-  mongodb:
-    image: mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./dbdata:/data/db
+  # #mongo db
+  # mongodb:
+  #   image: mongo
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - ./mongo_data:/data/db
 
   # flink
   jobmanager:
@@ -49,8 +50,6 @@ services:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
-    volumes:
-      - ./mongo_connector:/home
 
   taskmanager:
     image: flink:latest
@@ -63,8 +62,17 @@ services:
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
         taskmanager.numberOfTaskSlots: 2
+
+  # cassandra db
+  cassandra:
+    image: cassandra:latest
+    ports:
+      - 9042:9042
     volumes:
-      - ./mongo_connector:/home
+      - ./cassandra_data:/var/lib/cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME=flink_poc
+
 volumes:
-  dbdata:
-  mongo_connector:
+  mongo_data:
+  cassandra_data:

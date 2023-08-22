@@ -42,6 +42,7 @@ public class M2KConnector {
                     }
                 })
                 .build();
+
         // kafka sink
         KafkaSink<String> sink = KafkaSink.<String>builder()
                 .setBootstrapServers("kafka:9092")
