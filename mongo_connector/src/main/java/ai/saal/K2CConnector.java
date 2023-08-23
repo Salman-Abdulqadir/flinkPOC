@@ -11,7 +11,7 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.connectors.cassandra.CassandraSink;
 import org.apache.flink.util.Collector;
 import java.util.UUID;
-import scala.Tuple2;
+import org.apache.flink.api.java.tuple.Tuple2;
 public class K2CConnector {
     public static void main(String[] args) throws Exception{
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -44,7 +44,7 @@ public class K2CConnector {
                         collector.collect(new Tuple2<>(UUID.randomUUID(), s));
                     }
                 })
-                .keyBy(value -> value._1());
+                .keyBy(value -> value.f0);
         // processing the stream, and the make the data in a json format
         CassandraSink.addSink(stream)
                 .setHost(cassandraHost)
