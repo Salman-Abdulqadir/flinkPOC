@@ -38,7 +38,7 @@ services:
   #   ports:
   #     - "27017:27017"
   #   volumes:
-  #     - ./mongo_data:/data/db
+  #     - ./data/mongo_data:/data/db
 
   # flink
   jobmanager:
@@ -69,10 +69,10 @@ services:
     ports:
       - 9042:9042
     volumes:
-      - ./cassandra_data:/var/lib/cassandra
+      - ./data/cassandra_data:/var/lib/cassandra
     environment:
       - CASSANDRA_CLUSTER_NAME=flink_poc
 
 volumes:
-  mongo_data:
-  cassandra_data:
+  data/mongo_data:
+  data/cassandra_data:

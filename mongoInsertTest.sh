@@ -1,1 +1,0 @@
-python3.9 inserters/src/mongoInserter.py
