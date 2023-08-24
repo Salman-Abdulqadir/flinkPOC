@@ -1,4 +1,4 @@
-package ai.saal.connectors;
+package ai.saal.flink.jobs;
 
 import ai.saal.utils.CassandraConnector;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;

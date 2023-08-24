@@ -1,4 +1,4 @@
-package ai.saal.connectors;
+package ai.saal.flink.jobs;
 
 import org.apache.flink.connector.kafka.source.KafkaSource;
 import org.apache.flink.streaming.connectors.cassandra.CassandraSink;

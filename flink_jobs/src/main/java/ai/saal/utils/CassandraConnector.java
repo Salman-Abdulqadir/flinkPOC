@@ -2,6 +2,7 @@ package ai.saal.utils;
 
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;
+
 public class CassandraConnector {
     private Cluster cluster;
     private Session session;

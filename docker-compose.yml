@@ -74,5 +74,5 @@ services:
       - CASSANDRA_CLUSTER_NAME=flink_poc
 
 volumes:
-  data/mongo_data:
-  data/cassandra_data:
+  mongo_data:
+  cassandra_data:

@@ -1,6 +1,6 @@
 package ai.saal;
 
-import ai.saal.connectors.K2CConnector;
+import ai.saal.flink.jobs.*;
 
 public class Main {
     public static void main(String[] args) throws Exception{

@@ -13,10 +13,10 @@ echo "Inserting data to kafka: "
 python3.9 data_inserters/main.py >> ./data/kafka_inserted_data.txt&
 inserter_pid=$!
 
-echo "Compiling flink job"
-sh ./mongo_connector/debug.sh
+echo "Compiling flink job and submiting it to flink cluster on localhost:8081"
+cd flink_jobs && sh submit_job.sh
 
-
+echo "Data is being inserted to kafka ().... "
 # wait until all background program are finished before exiting
 wait
 echo "Program finished"

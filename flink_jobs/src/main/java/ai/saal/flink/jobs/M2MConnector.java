@@ -1,4 +1,4 @@
-package ai.saal.connectors;
+package ai.saal.flink.jobs;
 
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
