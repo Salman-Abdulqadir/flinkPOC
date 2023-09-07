@@ -16,7 +16,7 @@ inserter_pid=$!
 echo "Compiling flink job and submiting it to flink cluster on localhost:8081"
 cd flink_jobs && sh submit_job.sh
 
-echo "Data is being inserted to kafka (./data/kafka_inserted_data.txt).... "
+echo "Data is being inserted to kafka. Logs -> (./data/kafka_inserted_data.txt).... "
 # wait until all background program are finished before exiting
 wait
 echo "Program finished"
